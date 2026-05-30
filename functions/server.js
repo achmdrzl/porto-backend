@@ -76,8 +76,9 @@ router.get('/cv', (req, res) => {
 });
 
 // 3. Prefix rute berdasarkan arsitektur Netlify Functions
-// Catatan: Pastikan nama file ini adalah server.js dan berada di dalam folder 'functions'
+// 1. Menangkap route saat di-deploy (Production Netlify)
 app.use('/.netlify/functions/server/api', router);
+app.use('/api', router);
 
 // 4. HAPUS app.listen(). Ganti dengan module.exports.handler
 module.exports.handler = serverless(app);
