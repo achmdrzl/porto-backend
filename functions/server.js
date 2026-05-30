@@ -1,11 +1,16 @@
-// server.js
+// server.js (Pastikan file ini berada di dalam folder 'functions')
 const express = require('express');
+const serverless = require('serverless-http');
 const cors = require('cors');
-const app = express();
 
+const app = express();
 app.use(cors());
 
-app.get('/api/cv', (req, res) => {
+// 1. Gunakan Router khusus untuk Netlify
+const router = express.Router();
+
+// 2. Ubah app.get menjadi router.get (cukup '/cv' karena prefix-nya diatur di bawah)
+router.get('/cv', (req, res) => {
     res.json({
         name: "ACHMAD RIZAL",
         title: "SOFTWARE ENGINEER",
@@ -70,5 +75,9 @@ app.get('/api/cv', (req, res) => {
     });
 });
 
-const PORT = 5000;
-app.listen(PORT, () => console.log(`Backend running on http://localhost:${PORT}`));
+// 3. Prefix rute berdasarkan arsitektur Netlify Functions
+// Catatan: Pastikan nama file ini adalah server.js dan berada di dalam folder 'functions'
+app.use('/.netlify/functions/server/api', router);
+
+// 4. HAPUS app.listen(). Ganti dengan module.exports.handler
+module.exports.handler = serverless(app);
